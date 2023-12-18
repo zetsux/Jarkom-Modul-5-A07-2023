@@ -38,29 +38,458 @@
 >
 > Keterangan: Richter adalah DNS Server, Revolte adalah DHCP Server, Sein dan Stark adalah Web Server, Jumlah Host pada SchwerMountain adalah 64, Jumlah Host pada LaubHills adalah 255, Jumlah Host pada TurkRegion adalah 1022, Jumlah Host pada GrobeForest adalah 512
 
+## NetWork Configuration
+
+- Aura
+
+```
+auto eth0
+iface eth0 inet dhcp
+up /sbin/iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $(/sbin/ip -4 a show eth0 | /bin/grep -Po 'inet \K[0-9.]*')
+
+auto eth1
+iface eth1 inet static
+	address 192.172.0.1
+	netmask 255.255.255.252
+
+auto eth2
+iface eth2 inet static
+	address 192.172.0.5
+	netmask 255.255.255.252
+
+
+```
+
+- Heiter
+
+```
+auto eth0
+iface eth0 inet static
+	address 192.172.0.2
+	netmask 255.255.255.252
+        up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+auto eth1
+iface eth1 inet static
+	address 192.172.8.1
+	netmask 255.255.248.0
+
+auto eth2
+iface eth2 inet static
+	address 192.172.4.1
+	netmask 255.255.252.0
+
+
+```
+
+- Client (TurkRegion, GrobeForest, LaubHilss, SchwerMountain)
+
+```
+auto eth0
+iface eth0 inet dhcp
+
+```
+
+- Stark
+
+```
+auto eth0
+iface eth0 inet static
+	address 192.172.4.2
+  gateway 192.172.4.1
+	netmask 255.255.252.0
+  up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+```
+
+- Frieren
+
+```
+
+auto eth0
+iface eth0 inet static
+	address 192.172.0.6
+	netmask 255.255.255.252
+        up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+auto eth1
+iface eth1 inet static
+	address 192.172.0.9
+	netmask 255.255.255.252
+
+auto eth2
+iface eth2 inet static
+	address 192.172.0.13
+	netmask 255.255.255.252
+
+
+```
+
+- Stark
+
+```
+auto eth0
+iface eth0 inet static
+	address 192.172.0.10
+  gateway 192.172.0.9
+	netmask 255.255.255.252
+  up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+```
+
+- Himmel
+
+```
+
+auto eth0
+iface eth0 inet static
+	address 192.172.0.14
+	netmask 255.255.255.252
+  up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+auto eth1
+iface eth1 inet static
+	address 192.172.2.1
+	netmask 255.255.254.0
+
+auto eth2
+iface eth2 inet static
+	address 192.172.0.129
+	netmask 255.255.255.128
+
+
+```
+
+- Fern
+
+```
+
+auto eth0
+iface eth0 inet static
+	address 192.172.0.130
+	netmask 255.255.255.128
+  up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+auto eth1
+iface eth1 inet static
+	address 192.172.0.17
+	netmask 255.255.255.252
+
+auto eth2
+iface eth2 inet static
+	address 192.172.0.21
+	netmask 255.255.255.252
+
+
+```
+
+
+- Ritcher
+
+```
+
+auto eth0
+iface eth0 inet static
+	address 192.172.0.18
+        gateway 192.172.0.17
+	netmask 255.255.255.252
+
+```
+
+- Revolte
+
+```
+
+auto eth0
+iface eth0 inet static
+	address 192.172.0.22
+  gateway 192.172.0.21
+	netmask 255.255.255.252
+  up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+```
+
 ## Task B (VLSM)
 
-> Untuk menghitung rute-rute yang diperlukan, gunakan perhitungan dengan metode VLSM. Buat juga pohonnya, dan lingkari subnet yang dilewati.
+- Subnetting Process
+
+![jarkom modul 5](https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/3ec2d5b1-84bb-4f3c-9e53-3857f49a8f62)
+
+- Classless method untuk menentukan length netmask yang akan digunakan
+
+<img width="627" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/cf27fb00-8f66-44af-9328-6693ddf6288e">
+
+- Untuk menghitung rute-rute yang diperlukan, gunakan perhitungan dengan metode VLSM. Buat juga pohonnya, dan lingkari subnet yang dilewati.
+
+![jarkom modul 5 (1)](https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/f995863a-b6df-4d3c-8188-9c71905dc60f)
+
+- Pembagian IP hasil dari VLSM TREE
+
+<img width="861" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/c442da91-3f00-48c8-a43b-9561140f073f">
 
 ## Task C (Routing)
 
 > Kemudian buatlah rute sesuai dengan pembagian IP yang kalian lakukan.
 
+- Routing di Aura
+
+```
+# Routing Ke Frieren
+# route add -net <NID subnet> netmask <netmask> gw <IP gateway>
+# A5
+route add -net 192.172.0.8 netmask 255.255.255.252 gw 192.172.0.6
+# A6
+route add -net 192.172.0.12 netmask 255.255.255.252 gw 192.172.0.6
+# A7
+route add -net 192.172.2.0 netmask 255.255.254.0 gw 192.172.0.6
+# A8
+route add -net 192.172.0.128 netmask 255.255.255.128 gw 192.172.0.6
+# A9
+route add -net 192.172.0.16 netmask 255.255.255.252 gw 192.172.0.6
+# A10
+route add -net 192.172.0.20 netmask 255.255.255.252 gw 192.172.0.6
+
+
+# Routing ke Heiter
+# A2
+route add -net 192.172.8.0 netmask 255.255.248.0 gw 192.172.0.2
+# A3
+route add -net 192.172.4.0 netmask 255.255.252.0 gw 192.172.0.2
+
+
+```
+
+- Routing di Fern
+
+```
+# Backrouting
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.172.0.129
+
+
+```
+
+- Routing di Frieren
+
+```
+
+# Ke Himmel
+# Backrouting
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.172.0.5
+# A7
+route add -net 192.172.2.0 netmask 255.255.254.0 gw 192.172.0.14
+# A8
+route add -net 192.172.0.128 netmask 255.255.255.128 gw 192.172.0.14
+# A9
+route add -net 192.172.0.16 netmask 255.255.255.252 gw 192.172.0.14
+# A10
+route add -net 192.172.0.20 netmask 255.255.255.252 gw 192.172.0.14
+
+```
+
+- Routing di Heiter
+
+```
+
+# Backrouting
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.172.0.1
+
+
+```
+
+- Routing di Himmel
+
+```
+
+# Backrouting
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.172.0.13
+# A9
+route add -net 192.172.0.16 netmask 255.255.255.252 gw 192.172.0.130
+# A10
+route add -net 192.172.0.20 netmask 255.255.255.252 gw 192.172.0.130
+
+```
+
+- Test ping hasil Routing (Dari Fern ke Heiter)
+
+<img width="318" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/7c344964-f270-4ed6-a0ec-8315dbeec99a">
+
+
 ## Task D (DHCP)
 
 > Tugas berikutnya adalah memberikan ip pada subnet SchwerMountain, LaubHills, TurkRegion, dan GrobeForest menggunakan bantuan DHCP.
+
+- Configure DHCP Server di Revolte
+
+```
+
+apt-get update -y
+
+apt-get install isc-dhcp-server -y
+
+echo "
+INTERFACES=\"eth0\"
+" > /etc/default/isc-dhcp-server
+
+echo "
+
+default-lease-time 28800;
+max-lease-time 57600;
+
+ddns-update-style none;
+
+
+subnet 192.172.0.20 netmask 255.255.255.252 {
+    option routers 192.172.0.21;
+    option broadcast-address 192.172.0.23;
+    option domain-name-servers 192.168.122.1;
+}
+
+# Turk Region
+subnet 192.172.8.0 netmask 255.255.248.0 {
+    range 192.172.8.0 192.172.15.254;
+    option routers 192.172.8.1;
+    option broadcast-address 192.172.15.255;
+    option domain-name-servers 192.168.122.1;
+}
+
+# Grobe Forest
+subnet 192.172.4.0 netmask 255.255.252.0 {
+    range 192.172.4.1 192.172.7.254;
+    option routers 192.172.4.1;
+    option broadcast-address 192.172.7.255;
+    option domain-name-servers 192.168.122.1;
+}
+
+# LaubHilss
+subnet 192.172.2.0 netmask 255.255.254.0 {
+    range 192.172.2.0 192.172.3.254;
+    option routers 192.172.2.1;
+    option broadcast-address 192.172.3.255;
+    option domain-name-servers 192.168.122.1;
+}
+
+# SchwerMountain
+subnet 192.172.0.128 netmask 255.255.255.128 {
+    range 192.172.0.129 192.172.0.254;
+    option routers 192.172.0.129;
+    option broadcast-address 192.172.0.255;
+    option domain-name-servers 192.168.122.1;
+}
+
+" > /etc/dhcp/dhcpd.conf
+
+rm /var/run/dhcpd.pid
+
+service isc-dhcp-server restart
+service isc-dhcp-server status
+
+```
+
+- Configure DHCP Relay di Himmel dan Heiter
+
+```
+
+apt-get update
+
+apt-get install isc-dhcp-relay -y
+
+echo '
+SERVERS="192.172.0.22"
+INTERFACES="eth0 eth1 eth2"
+OPTIONS=""
+' > /etc/default/isc-dhcp-relay
+
+echo '
+net.ipv4.ip_forward=1
+' > /etc/sysctl.conf
+
+service isc-dhcp-relay restart
+
+```
+
+- DHPC Result LaubHilss
+
+<img width="383" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/e57f2796-68c2-4076-8a12-71068119fd82">
+
+- DHCP Result SchwerMountain
+
+<img width="398" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/0d4bdc75-124a-4ae2-b741-5fd3d7900c6d">
+
+
+- DHCP Result Turk Region
+
+<img width="400" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/96d3c482-fd06-4464-bba9-1b2c7c69d850">
+
+
+- DHCP Result GrobeForest
+
+<img width="405" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/b5acab63-7152-4f06-aac9-bab81f535f48">
+
 
 ## Soal 1
 
 > Agar topologi yang kalian buat dapat mengakses keluar, kalian diminta untuk mengkonfigurasi Aura menggunakan iptables, tetapi tidak ingin menggunakan MASQUERADE.
 
+- Tambahkan iptables berikut pada Aura
+
+```
+iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $(/sbin/ip -4 a show eth0 | /bin/grep -Po 'inet \K[0-9.]*')
+
+```
+
+Tujuan dari iptables berikut yaitu untuk mengganti IP dari source packet yang akan keluar melalui interface eth0 Aura menuju keluar NAT. command `$(/sbin/ip -4 a show eth0 | /bin/grep -Po 'inet \K[0-9.]*')` digunakan untuk mendapatkan IP eth0 dari router Aura.
+
+<img width="418" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/1a873173-6ef4-4821-b9f4-6dc96ea525dd">
+
+
+- Test ping dengan google
+
+<img width="537" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/00464f3a-e7f5-41bd-833a-7ad718c59bcc">
+
+
 ## Soal 2
 
 > Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
 
+- Configure iptables berikut pada client
+
+```
+iptables -F
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+iptables -A INPUT -p tcp -j DROP
+iptables -A INPUT -p udp -j DROP
+
+```
+
+- Test TCP connection menggunakan telnet dengan port selain 8080
+
+<img width="483" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/8ef5af00-5e91-420d-8bee-a3e3ec6b1aae">
+
+
+- Test TCP connection menggunakan telnet dengan port 8080
+
+<img width="489" alt="image" src="https://github.com/zetsux/Jarkom-Modul-5-A07-2023/assets/89715780/5c707eb6-ccd5-4ec1-af63-052ea5eae1a0">
+
+- Test UDP connection using nc
+
+
 ## Soal 3
 
 > Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
+
+- Tambahkan iptables berikut pada DHCP server dan DNS server
+
+```
+#No 3
+iptables -F
+iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 3/second -j ACCEPT 
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+
+
+```
+
+maka hanya akan bisa di ping tiap detiknya oleh maksimal 3 node.
+
 
 ## Soal 4
 
